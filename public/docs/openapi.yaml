@@ -1,0 +1,341 @@
+openapi: 3.0.3
+info:
+  title: APO - Webservice RESTful (Produtos e Fornecedores)
+  description: >
+    API REST desenvolvida em Lumen para a Atividade Prática Orientada da
+    disciplina Desenvolvimento de Serviços para Internet (UNIPAR EAD).
+    Cobre o CRUD de Produtos e Fornecedores, com relacionamento N:N entre
+    eles (um produto pode ter vários fornecedores e vice-versa).
+  version: "1.0.0"
+  contact:
+    name: João Pedro Raldi
+    url: https://ralditech.com.br/apo-joao-pedro-raldi
+servers:
+  - url: https://ralditech.com.br/apo-joao-pedro-raldi
+    description: Produção
+  - url: http://localhost:8000
+    description: Ambiente local de desenvolvimento
+tags:
+  - name: Produtos
+  - name: Fornecedores
+paths:
+  /produtos:
+    get:
+      tags: [Produtos]
+      summary: Lista todos os produtos
+      description: Aceita "?fornecedor_id=" opcional na querystring para filtrar por fornecedor.
+      parameters:
+        - name: fornecedor_id
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Lista de produtos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Produto"
+    post:
+      tags: [Produtos]
+      summary: Cadastra um novo produto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProdutoEntrada"
+      responses:
+        "201":
+          description: Produto criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Produto"
+        "422":
+          description: Dados inválidos
+  /produtos/{id}:
+    get:
+      tags: [Produtos]
+      summary: Busca um produto pelo id
+      parameters:
+        - $ref: "#/components/parameters/ProdutoId"
+      responses:
+        "200":
+          description: Produto encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Produto"
+        "404":
+          description: Produto não encontrado
+    put:
+      tags: [Produtos]
+      summary: Atualiza um produto existente
+      parameters:
+        - $ref: "#/components/parameters/ProdutoId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProdutoEntrada"
+      responses:
+        "200":
+          description: Produto atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Produto"
+        "404":
+          description: Produto não encontrado
+        "422":
+          description: Dados inválidos
+    delete:
+      tags: [Produtos]
+      summary: Remove um produto
+      parameters:
+        - $ref: "#/components/parameters/ProdutoId"
+      responses:
+        "200":
+          description: Produto removido
+        "404":
+          description: Produto não encontrado
+  /produtos/nome/{nome}:
+    get:
+      tags: [Produtos]
+      summary: Busca produtos por nome (contém, case-insensitive)
+      parameters:
+        - name: nome
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Produtos encontrados
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Produto"
+  /produtos/fornecedor/{fornecedorId}:
+    get:
+      tags: [Produtos]
+      summary: Lista os produtos de um fornecedor específico
+      parameters:
+        - name: fornecedorId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Produtos do fornecedor
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Produto"
+        "404":
+          description: Fornecedor não encontrado
+  /produtos/{id}/fornecedores/{fornecedorId}:
+    post:
+      tags: [Produtos]
+      summary: Vincula um produto a um fornecedor
+      parameters:
+        - $ref: "#/components/parameters/ProdutoId"
+        - name: fornecedorId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Vínculo criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Produto"
+        "404":
+          description: Produto ou fornecedor não encontrado
+    delete:
+      tags: [Produtos]
+      summary: Remove o vínculo entre um produto e um fornecedor
+      parameters:
+        - $ref: "#/components/parameters/ProdutoId"
+        - name: fornecedorId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Vínculo removido
+        "404":
+          description: Produto não encontrado
+  /fornecedores:
+    get:
+      tags: [Fornecedores]
+      summary: Lista todos os fornecedores
+      responses:
+        "200":
+          description: Lista de fornecedores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Fornecedor"
+    post:
+      tags: [Fornecedores]
+      summary: Cadastra um novo fornecedor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FornecedorEntrada"
+      responses:
+        "201":
+          description: Fornecedor criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Fornecedor"
+        "422":
+          description: Dados inválidos
+  /fornecedores/{id}:
+    get:
+      tags: [Fornecedores]
+      summary: Busca um fornecedor pelo id
+      parameters:
+        - $ref: "#/components/parameters/FornecedorId"
+      responses:
+        "200":
+          description: Fornecedor encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Fornecedor"
+        "404":
+          description: Fornecedor não encontrado
+    put:
+      tags: [Fornecedores]
+      summary: Atualiza um fornecedor existente
+      parameters:
+        - $ref: "#/components/parameters/FornecedorId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FornecedorEntrada"
+      responses:
+        "200":
+          description: Fornecedor atualizado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Fornecedor"
+        "404":
+          description: Fornecedor não encontrado
+        "422":
+          description: Dados inválidos
+    delete:
+      tags: [Fornecedores]
+      summary: Remove um fornecedor
+      parameters:
+        - $ref: "#/components/parameters/FornecedorId"
+      responses:
+        "200":
+          description: Fornecedor removido
+        "404":
+          description: Fornecedor não encontrado
+components:
+  parameters:
+    ProdutoId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    FornecedorId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+  schemas:
+    ProdutoEntrada:
+      type: object
+      required: [nome, preco]
+      properties:
+        nome:
+          type: string
+          example: Teclado Mecânico RGB
+        descricao:
+          type: string
+          nullable: true
+        preco:
+          type: number
+          format: float
+          example: 259.90
+        quantidade_estoque:
+          type: integer
+          example: 40
+        fornecedores:
+          type: array
+          description: Ids dos fornecedores a vincular ao produto (opcional)
+          items:
+            type: integer
+    Produto:
+      allOf:
+        - $ref: "#/components/schemas/ProdutoEntrada"
+        - type: object
+          properties:
+            id:
+              type: integer
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time
+    FornecedorEntrada:
+      type: object
+      required: [nome, cnpj]
+      properties:
+        nome:
+          type: string
+          example: Tech Distribuidora Ltda
+        cnpj:
+          type: string
+          example: "12.345.678/0001-90"
+        email:
+          type: string
+          nullable: true
+        telefone:
+          type: string
+          nullable: true
+        endereco:
+          type: string
+          nullable: true
+    Fornecedor:
+      allOf:
+        - $ref: "#/components/schemas/FornecedorEntrada"
+        - type: object
+          properties:
+            id:
+              type: integer
+            created_at:
+              type: string
+              format: date-time
+            updated_at:
+              type: string
+              format: date-time

@@ -1,0 +1,110 @@
+{
+	"info": {
+		"name": "APO - Webservice RESTful (Produtos e Fornecedores)",
+		"description": "Collection para testar a API da Atividade Pratica Orientada de Desenvolvimento de Servicos para Internet.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{ "key": "base_url", "value": "http://localhost:8000" }
+	],
+	"item": [
+		{
+			"name": "Fornecedores",
+			"item": [
+				{
+					"name": "Listar fornecedores",
+					"request": { "method": "GET", "url": "{{base_url}}/fornecedores" }
+				},
+				{
+					"name": "Buscar fornecedor por id",
+					"request": { "method": "GET", "url": "{{base_url}}/fornecedores/1" }
+				},
+				{
+					"name": "Cadastrar fornecedor",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"url": "{{base_url}}/fornecedores",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Fornecedor Exemplo\",\n  \"cnpj\": \"00.000.000/0001-00\",\n  \"email\": \"contato@exemplo.com\",\n  \"telefone\": \"(11) 90000-0000\",\n  \"endereco\": \"Rua Exemplo, 100\"\n}"
+						}
+					}
+				},
+				{
+					"name": "Atualizar fornecedor",
+					"request": {
+						"method": "PUT",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"url": "{{base_url}}/fornecedores/1",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"telefone\": \"(11) 91111-1111\"\n}"
+						}
+					}
+				},
+				{
+					"name": "Remover fornecedor",
+					"request": { "method": "DELETE", "url": "{{base_url}}/fornecedores/1" }
+				}
+			]
+		},
+		{
+			"name": "Produtos",
+			"item": [
+				{
+					"name": "Listar produtos",
+					"request": { "method": "GET", "url": "{{base_url}}/produtos" }
+				},
+				{
+					"name": "Buscar produto por id",
+					"request": { "method": "GET", "url": "{{base_url}}/produtos/1" }
+				},
+				{
+					"name": "Buscar produto por nome",
+					"request": { "method": "GET", "url": "{{base_url}}/produtos/nome/teclado" }
+				},
+				{
+					"name": "Buscar produtos por fornecedor",
+					"request": { "method": "GET", "url": "{{base_url}}/produtos/fornecedor/1" }
+				},
+				{
+					"name": "Cadastrar produto",
+					"request": {
+						"method": "POST",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"url": "{{base_url}}/produtos",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\": \"Produto Exemplo\",\n  \"descricao\": \"Descricao do produto\",\n  \"preco\": 99.90,\n  \"quantidade_estoque\": 10,\n  \"fornecedores\": [1, 2]\n}"
+						}
+					}
+				},
+				{
+					"name": "Atualizar produto",
+					"request": {
+						"method": "PUT",
+						"header": [{ "key": "Content-Type", "value": "application/json" }],
+						"url": "{{base_url}}/produtos/1",
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"preco\": 129.90\n}"
+						}
+					}
+				},
+				{
+					"name": "Remover produto",
+					"request": { "method": "DELETE", "url": "{{base_url}}/produtos/1" }
+				},
+				{
+					"name": "Vincular produto a fornecedor",
+					"request": { "method": "POST", "url": "{{base_url}}/produtos/1/fornecedores/2" }
+				},
+				{
+					"name": "Desvincular produto de fornecedor",
+					"request": { "method": "DELETE", "url": "{{base_url}}/produtos/1/fornecedores/2" }
+				}
+			]
+		}
+	]
+}
