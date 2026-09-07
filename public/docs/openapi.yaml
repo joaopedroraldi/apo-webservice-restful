@@ -11,7 +11,7 @@ info:
     name: João Pedro Raldi
     url: https://ralditech.com.br/apo-joao-pedro-raldi
 servers:
-  - url: https://ralditech.com.br/apo-joao-pedro-raldi
+  - url: https://ralditech.com.br/apo-joao-pedro-raldi/public
     description: Produção
   - url: http://localhost:8000
     description: Ambiente local de desenvolvimento
